@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 )
 
 type Weather struct {
@@ -14,7 +15,7 @@ type Weather struct {
 }
 
 func GetWeather() (str string, err error) {
-	body, err := httpGetBody("https://www.jma.go.jp/bosai/forecast/data/overview_forecast/130000.json")
+	body, err := httpGetBody("https://www.jma.go.jp/bosai/forecast/data/overview_forecast/" + os.Getenv("PREFECTURE_CODE") + ".json")
 	if err != nil {
 		return str, err
 	}
