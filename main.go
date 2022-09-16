@@ -6,7 +6,6 @@ import (
 	"os"
 	"net/http"
 
-	// "github.com/joho/godotenv"
 	"github.com/line/line-bot-sdk-go/v7/linebot"
 	"github.com/robfig/cron/v3"
 	"tsugumi_bot/weather"
@@ -14,8 +13,7 @@ import (
 
 func main() {
 	cron := cron.New()
-	// cron.AddFunc("CRON_TZ=Asia/Tokyo 0 7 * * *", func() {
-	cron.AddFunc("@every 30s", func() {
+	cron.AddFunc("CRON_TZ=Asia/Tokyo 2 7 * * *", func() {
 		fmt.Println("start linebot")
 		broadcastWeather()
 		fmt.Println("end linebot")
@@ -28,7 +26,6 @@ func main() {
 }
 
 func broadcastWeather() {
-	// godotenv.Load(".env")
 	lineBot, err := linebot.New(
 		os.Getenv("LINE_BOT_CHANNEL_SECRET"),
 		os.Getenv("LINE_BOT_CHANNEL_TOKEN"),
