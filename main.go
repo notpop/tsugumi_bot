@@ -11,7 +11,7 @@ import (
 
 func main() {
 	cron := cron.New()
-	cron.AddFunc("0 9 * * *", func() {
+	cron.AddFunc("30 * * * *", func() {
 		lineBot, err := linebot.New(
 			os.Getenv("LINE_BOT_CHANNEL_SECRET"),
 			os.Getenv("LINE_BOT_CHANNEL_TOKEN"),
