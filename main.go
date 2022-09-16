@@ -30,4 +30,5 @@ func main() {
 			log.Fatal(err)
 		}
 	})
+	cron.Start()
 }
