@@ -13,15 +13,15 @@ import (
 
 func main() {
 	cron := cron.New()
-	cron.AddFunc("CRON_TZ=Asia/Tokyo 2 7 * * *", func() {
-		fmt.Println("start linebot")
+	cron.AddFunc("CRON_TZ=Asia/Tokyo 0 9 * * *", func() {
+		fmt.Println("Start LineBot")
 		broadcastWeather()
-		fmt.Println("end linebot")
+		fmt.Println("End LineBot")
 	})
 	cron.Start()
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
-		fmt.Printf(err.Error())
+		fmt.Println(err.Error())
 	}
 }
 
