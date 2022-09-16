@@ -6,4 +6,4 @@ private line bot
 <!-- $ heroku run ./bin/tsugumi_bot -->
 ```
 
-RailWayへ移行済　毎朝9時に実行
+RailWayへ移行済　毎朝8時に実行
