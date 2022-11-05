@@ -14,9 +14,9 @@ import (
 func main() {
 	cron := cron.New()
 	cron.AddFunc("CRON_TZ=Asia/Tokyo 0 8 * * *", func() {
-		fmt.Println("Start LineBot")
+		fmt.Println("Start LineBot.")
 		broadcastWeather()
-		fmt.Println("End LineBot")
+		fmt.Println("End LineBot.")
 	})
 	cron.Start()
 
