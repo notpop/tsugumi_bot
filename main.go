@@ -61,7 +61,7 @@ func mainHandler(w http.ResponseWriter, req *http.Request) {
 					log.Print(err)
 				}
 
-				replymessage := strings.ReplaceAll(response.Choices[0].Text, "¥n", "")
+				replymessage := strings.ReplaceAll(response.Choices[0].Text, "\n", "")
 				if _, err = line.Client.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(replymessage)).Do(); err != nil {
 					log.Print(err)
 				}
