@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 	"tsugumi_bot/config"
 	"tsugumi_bot/line"
 	"tsugumi_bot/openai"
@@ -62,10 +63,11 @@ func mainHandler(w http.ResponseWriter, req *http.Request) {
 					log.Print(err)
 				}
 				replymessage := strings.ReplaceAll(response.Choices[0].Text, "\n", "")
-				log.Println("replymessage: " + replymessage)
 				if _, err = line.Client.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(replymessage)).Do(); err != nil {
 					log.Print(err)
 				}
+				time.Sleep(time.Second * 10)
+				log.Println("replymessage: " + replymessage)
 			case *linebot.StickerMessage:
 				replyMessage := fmt.Sprintf("スタンプIDが%sで種類が%sだよ！", message.StickerID, message.StickerResourceType)
 				if _, err = line.Client.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(replyMessage)).Do(); err != nil {
