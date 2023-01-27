@@ -85,7 +85,7 @@ func main() {
 	})
 	instance.Start()
 
-	http.HandleFunc("/callback", mainHandler)
+	http.HandleFunc("/webhook", mainHandler)
 
 	if err := http.ListenAndServe(config.Config.Port, nil); err != nil {
 		log.Fatal(err)
