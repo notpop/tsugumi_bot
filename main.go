@@ -2,45 +2,92 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"os"
-	"net/http"
-
 	"github.com/line/line-bot-sdk-go/v7/linebot"
 	"github.com/robfig/cron/v3"
+	"log"
+	"net/http"
+	"tsugumi_bot/config"
+	"tsugumi_bot/line"
+	"tsugumi_bot/openai"
+	"tsugumi_bot/utils"
 	"tsugumi_bot/weather"
 )
 
-func main() {
-	cron := cron.New()
-	cron.AddFunc("CRON_TZ=Asia/Tokyo 0 8 * * *", func() {
-		fmt.Println("Start LineBot.")
-		broadcastWeather()
-		fmt.Println("End LineBot.")
-	})
-	cron.Start()
-
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		fmt.Println(err.Error())
-	}
+func init() {
+	utils.LoggingSettings(config.Config.SystemLog)
 }
 
 func broadcastWeather() {
-	lineBot, err := linebot.New(
-		os.Getenv("LINE_BOT_CHANNEL_SECRET"),
-		os.Getenv("LINE_BOT_CHANNEL_TOKEN"),
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	result, err := weather.GetWeather()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	message := linebot.NewTextMessage(result)
-	if _, err := lineBot.BroadcastMessage(message).Do(); err != nil {
+	line, err := line.New(config.Config.ChannelSecret, config.Config.ChannelToken)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = line.BroadcastMessage(result)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func mainHandler(w http.ResponseWriter, req *http.Request) {
+	log.Println("start main handler")
+	fmt.Println("start main handler")
+	line, err := line.New(config.Config.ChannelSecret, config.Config.ChannelToken)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	events, err := line.Client.ParseRequest(req)
+	if err != nil {
+		if err == linebot.ErrInvalidSignature {
+			w.WriteHeader(400)
+		} else {
+			w.WriteHeader(500)
+		}
+		return
+	}
+
+	for _, event := range events {
+		if event.Type == linebot.EventTypeMessage {
+			switch message := event.Message.(type) {
+			case *linebot.TextMessage:
+				response, err := openai.SendQuestion(message.Text)
+				if err != nil {
+					log.Print(err)
+				}
+
+				if _, err = line.Client.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(response.Choices[0].Text)).Do(); err != nil {
+					log.Print(err)
+				}
+			case *linebot.StickerMessage:
+				replyMessage := fmt.Sprintf("sticker id is %s, stickerResourceType is %s", message.StickerID, message.StickerResourceType)
+				if _, err = line.Client.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(replyMessage)).Do(); err != nil {
+					log.Print(err)
+				}
+			}
+		}
+	}
+	log.Println("end main handler")
+	fmt.Println("end main handler")
+}
+
+func main() {
+	instance := cron.New()
+	instance.AddFunc("CRON_TZ=Asia/Tokyo 0 8 * * *", func() {
+		log.Println("start term execute linebot.")
+		broadcastWeather()
+		log.Println("end term execute linebot.")
+	})
+	instance.Start()
+
+	http.HandleFunc("/callback", mainHandler)
+
+	if err := http.ListenAndServe(config.Config.Port, nil); err != nil {
 		log.Fatal(err)
 	}
 }

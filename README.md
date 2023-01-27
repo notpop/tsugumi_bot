@@ -1,11 +1,22 @@
 # tsugumi_bot
-private line bot
+### This repository is Private Line Bot Tsugumi.
 
 
+- This memo is command for Heroku
 ```
 <!-- $ heroku run ./bin/tsugumi_bot -->
 ```
 
-RailWayへ移行済　毎朝8時に実行
+- Migration from Heroku to RailWay
+- Exec every a.m. 8:00
 
-2022/11/5: RailWayのstarter planでは１ヶ月フルで毎朝稼働が難しいためdeveloper planに変更
+### 更新履歴
+##### 2022/11/5
+- RailWayのstarter planでは１ヶ月フルで毎朝稼働が難しいためdeveloper planに変更
+<br>
+##### 2023/1/27
+- OpenAIのapiのパッケージを作成
+- httpRequestをより扱い易い様に共通化
+- loggingの整備
+- 上記変更点を既存のパッケージまたは機能に反映
+<br>

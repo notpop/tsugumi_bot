@@ -3,9 +3,9 @@ package weather
 import (
 	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
-	"os"
+	"log"
+	"tsugumi_bot/config"
+	"tsugumi_bot/utils"
 )
 
 type Weather struct {
@@ -14,42 +14,16 @@ type Weather struct {
 	Body     string `json:"text"`
 }
 
-func GetWeather() (str string, err error) {
-	body, err := httpGetBody("https://www.jma.go.jp/bosai/forecast/data/overview_forecast/" + os.Getenv("PREFECTURE_CODE") + ".json")
-	if err != nil {
-		return str, err
-	}
-	weather, err := formatWeather(body)
-	if err != nil {
-		return str, err
-	}
-
-	result := weather.ToS()
-
-	return result, nil
-}
-
-func httpGetBody(url string) ([]byte, error) {
-	response, err := http.Get(url)
-	if err != nil {
-		err = fmt.Errorf("Get Http Error: %s", err)
-		return nil, err
-	}
-	defer response.Body.Close()
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		err = fmt.Errorf("IO Read Error:: %s", err)
-		return nil, err
-	}
-
-	return body, nil
-}
+const (
+	URL             = "https://www.jma.go.jp/bosai/forecast/data/overview_forecast/"
+	PREFECTURE_CODE = "270000"
+	END_POINT       = ".json"
+)
 
 func formatWeather(body []byte) (*Weather, error) {
 	weather := new(Weather)
 	if err := json.Unmarshal(body, weather); err != nil {
-		err = fmt.Errorf("JSON Unmarshal error: %s", err)
+		log.Println("JSON unmarshal error: ", err)
 		return nil, err
 	}
 	return weather, nil
@@ -62,4 +36,27 @@ func (w *Weather) ToS() string {
 	result := area + head + body
 
 	return result
+}
+
+func GetWeather() (str string, err error) {
+	prefecture_code := config.Config.PrefectureCode
+	if prefecture_code == "" {
+		prefecture_code = PREFECTURE_CODE
+	}
+
+	client := utils.New(URL, map[string]string{})
+	body, err := client.DoRequest("GET", prefecture_code+END_POINT, map[string]string{}, nil)
+	if err != nil {
+		log.Println("client doRequest error: ", err)
+		return "", err
+	}
+
+	weather, err := formatWeather(body)
+	if err != nil {
+		log.Println("weather formatting error: ", err)
+		return "", err
+	}
+
+	result := weather.ToS()
+	return result, nil
 }
