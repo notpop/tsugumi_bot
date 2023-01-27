@@ -6,6 +6,7 @@ import (
 	"github.com/robfig/cron/v3"
 	"log"
 	"net/http"
+	"strings"
 	"tsugumi_bot/config"
 	"tsugumi_bot/line"
 	"tsugumi_bot/openai"
@@ -36,7 +37,6 @@ func broadcastWeather() {
 
 func mainHandler(w http.ResponseWriter, req *http.Request) {
 	log.Println("start main handler")
-	fmt.Println("start main handler")
 	line, err := line.New(config.Config.ChannelSecret, config.Config.ChannelToken)
 	if err != nil {
 		log.Fatal(err)
@@ -61,11 +61,12 @@ func mainHandler(w http.ResponseWriter, req *http.Request) {
 					log.Print(err)
 				}
 
-				if _, err = line.Client.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(response.Choices[0].Text)).Do(); err != nil {
+				replymessage := strings.ReplaceAll(response.Choices[0].Text, "¥n", "")
+				if _, err = line.Client.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(replymessage)).Do(); err != nil {
 					log.Print(err)
 				}
 			case *linebot.StickerMessage:
-				replyMessage := fmt.Sprintf("sticker id is %s, stickerResourceType is %s", message.StickerID, message.StickerResourceType)
+				replyMessage := fmt.Sprintf("スタンプIDが%sで種類が%sだよ！", message.StickerID, message.StickerResourceType)
 				if _, err = line.Client.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(replyMessage)).Do(); err != nil {
 					log.Print(err)
 				}
@@ -73,7 +74,6 @@ func mainHandler(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 	log.Println("end main handler")
-	fmt.Println("end main handler")
 }
 
 func main() {
