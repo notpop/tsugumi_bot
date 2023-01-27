@@ -13,10 +13,10 @@
 ### 更新履歴
 ##### 2022/11/5
 - RailWayのstarter planでは１ヶ月フルで毎朝稼働が難しいためdeveloper planに変更
-<br>
+
 ##### 2023/1/27
 - OpenAIのapiのパッケージを作成
 - httpRequestをより扱い易い様に共通化
 - loggingの整備
 - 上記変更点を既存のパッケージまたは機能に反映
-<br>
+
