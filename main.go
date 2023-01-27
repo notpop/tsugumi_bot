@@ -56,12 +56,13 @@ func mainHandler(w http.ResponseWriter, req *http.Request) {
 		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
+				log.Println("question: " + message.Text)
 				response, err := openai.SendQuestion(message.Text)
 				if err != nil {
 					log.Print(err)
 				}
-
 				replymessage := strings.ReplaceAll(response.Choices[0].Text, "\n", "")
+				log.Println("replymessage: " + replymessage)
 				if _, err = line.Client.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(replymessage)).Do(); err != nil {
 					log.Print(err)
 				}
