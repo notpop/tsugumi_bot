@@ -3,17 +3,18 @@ package line
 import (
 	"github.com/line/line-bot-sdk-go/v7/linebot"
 	"log"
+	"time"
 )
 
-type Line struct {
+type Client struct {
 	Client *linebot.Client
 }
 
-type LineResponse struct {
+type Response struct {
 	RequestBody string `json:"RequestBody"`
 }
 
-type LineRequest struct {
+type Request struct {
 	Destination string `json:"destination"`
 	Events      []struct {
 		Type    string `json:"type"`
@@ -36,7 +37,7 @@ type LineRequest struct {
 	} `json:"events"`
 }
 
-func New(secret string, token string) (*Line, error) {
+func New(secret string, token string) (*Client, error) {
 	lineBot, err := linebot.New(secret, token)
 	if err != nil {
 		log.Println("linebot new error.")
@@ -44,14 +45,46 @@ func New(secret string, token string) (*Line, error) {
 		return nil, err
 	}
 
-	client := &Line{lineBot}
+	client := &Client{lineBot}
 	return client, nil
 }
 
-func (line *Line) BroadcastMessage(_message string) error {
-	message := linebot.NewTextMessage(_message)
-	if _, err := line.Client.BroadcastMessage(message).Do(); err != nil {
+func (client *Client) BroadcastMessage(message string) error {
+	if _, err := client.Client.BroadcastMessage(linebot.NewTextMessage(message)).Do(); err != nil {
 		log.Println("linebot broadcast error.")
+
+		return err
+	}
+
+	return nil
+}
+
+func (client *Client) ReplyMessageWithLog(message string, replyToken string, coefficient int64) error {
+	if _, err := client.Client.ReplyMessage(replyToken, linebot.NewTextMessage(message)).Do(); err != nil {
+		log.Println("linebot replaymessagewithlog error.")
+
+		return err
+	}
+
+	time.Sleep(time.Second * time.Duration(coefficient))
+	log.Println("replymessage: " + message)
+
+	return nil
+}
+
+func (client *Client) ReplyMessage(message string, replyToken string) error {
+	if _, err := client.Client.ReplyMessage(replyToken, linebot.NewTextMessage(message)).Do(); err != nil {
+		log.Println("linebot replaymessage error.")
+
+		return err
+	}
+
+	return nil
+}
+
+func (client *Client) pushMessage(message string, id string) error {
+	if _, err := client.Client.PushMessage(id, linebot.NewTextMessage(message)).Do(); err != nil {
+		log.Println("linebot pushmessage error.")
 
 		return err
 	}
