@@ -113,7 +113,8 @@ func webhooker(w http.ResponseWriter, req *http.Request) {
 
 func main() {
 	instance := cron.New()
-	instance.AddFunc("CRON_TZ=Asia/Tokyo 0 8 * * *", func() {
+	// instance.AddFunc("CRON_TZ=Asia/Tokyo 0 8 * * *", func() {
+	instance.AddFunc("CRON_TZ=Asia/Tokyo * * * * *", func() {
 		log.Println("start term execute linebot.")
 		broadcastWeather()
 		log.Println("end term execute linebot.")
