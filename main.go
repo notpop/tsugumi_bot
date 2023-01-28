@@ -121,7 +121,7 @@ func main() {
 	})
 	instance.Start()
 
-	// http.HandleFunc("/webhook", webhooker)
+	http.HandleFunc("/webhook", webhooker)
 
 	if err := http.ListenAndServe(config.Config.Port, nil); err != nil {
 		log.Fatal(err)
