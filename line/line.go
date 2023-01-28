@@ -10,11 +10,7 @@ type Client struct {
 	Client *linebot.Client
 }
 
-type Response struct {
-	RequestBody string `json:"RequestBody"`
-}
-
-type Request struct {
+type Webhook struct {
 	Destination string `json:"destination"`
 	Events      []struct {
 		Type    string `json:"type"`
