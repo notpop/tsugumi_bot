@@ -15,7 +15,6 @@ import (
 )
 
 const (
-	MESSAGE_API_SEND_LIMIT         = 1000
 	DEFAULT_OUTPUT_LOG_BUFFER_TIME = 10
 )
 
