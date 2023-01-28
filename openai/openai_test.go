@@ -15,7 +15,7 @@ func ExampleSendQuestion() {
 	fmt.Println(text)
 }
 
-func TestHSendQuestion(t *testing.T) {
+func TestSendQuestion(t *testing.T) {
 	result, err := SendQuestion("Say this is a test")
 	if err != nil {
 		t.Error("\n結果が取れてません!!!")

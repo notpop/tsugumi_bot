@@ -34,6 +34,8 @@ type ChatGptResponse struct {
 const (
 	URL                         = "https://api.openai.com/v1/"
 	CREATE_COMPLETION_END_POINT = "completions"
+	DEFAULT_MODEL               = "text-davinci-003"
+	DEFAULT_MAX_TOKEN           = 4000
 )
 
 func header() map[string]string {
@@ -45,9 +47,9 @@ func header() map[string]string {
 
 func SendQuestion(prompt string) (*ChatGptResponse, error) {
 	chatGpt := &ChatGpt{
-		Model:    "text-davinci-003",
+		Model:    DEFAULT_MODEL,
 		Prompt:   prompt,
-		MaxToken: 4000,
+		MaxToken: DEFAULT_MAX_TOKEN,
 	}
 
 	data, err := json.Marshal(chatGpt)

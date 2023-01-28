@@ -15,6 +15,7 @@ import (
 )
 
 const (
+	MESSAGE_API_SEND_LIMIT         = 1000
 	DEFAULT_OUTPUT_LOG_BUFFER_TIME = 10
 )
 
@@ -61,6 +62,12 @@ func getStampMessage(id string, resouceType linebot.StickerResourceType) string 
 
 func webhooker(w http.ResponseWriter, req *http.Request) {
 	log.Println("start webhooker")
+
+	if line.IsLimit() {
+		log.Println("message api limit")
+
+		return
+	}
 
 	line, err := line.New(config.Config.ChannelSecret, config.Config.ChannelToken)
 	if err != nil {

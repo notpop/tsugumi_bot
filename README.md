@@ -23,3 +23,5 @@
 ##### 2023/1/28
 - linebotパッケージのwrapperを作成
 - main.goのリファクタリング（主にwebhook部分）
+- 動的にMessageApiの送信上限を判定し超えていたら処理しない機能を追加
+- openai.goの軽微なリファクタリング
