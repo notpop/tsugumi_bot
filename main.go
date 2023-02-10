@@ -96,7 +96,7 @@ func webhooker(w http.ResponseWriter, req *http.Request) {
 			question := message.Text
 			answer := getAnswer(question)
 			replacedAnswer := replaceIndention(answer)
-			err = line.ReplyMessageWithLog(question + replacedAnswer, event.ReplyToken, DEFAULT_OUTPUT_LOG_BUFFER_TIME)
+			err = line.ReplyMessageWithLog(replacedAnswer, event.ReplyToken, DEFAULT_OUTPUT_LOG_BUFFER_TIME)
 			if err != nil {
 				log.Fatal(err)
 			}
