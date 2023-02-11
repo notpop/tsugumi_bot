@@ -52,7 +52,7 @@ func getAnswer(message string) string {
 }
 
 func replaceIndention(message string) string {
-	return strings.ReplaceAll(message, "\n", "")
+	return strings.Replace(message, "\n", "", 2)
 }
 
 func getStampMessage(id string, resouceType linebot.StickerResourceType) string {
