@@ -15,7 +15,6 @@ type ConfigList struct {
 	Port                 string
 	PrefectureCode       string
 	TsugumiSettings      string
-	TsugumiSettings2     string
 }
 
 var Config ConfigList
@@ -42,11 +41,10 @@ func init() {
 		ChannelToken:  os.Getenv("LINE_BOT_CHANNEL_TOKEN"),
 		// SystemLog:        cfg.Section("system").Key("log_file").String(),
 		// Port:             ":" + cfg.Section("web").Key("port").String(),
-		SystemLog:        os.Getenv("SYSTEM_LOG"),
-		Port:             ":" + os.Getenv("PORT"),
-		PrefectureCode:   os.Getenv("PREFECTURE_CODE"),
-		TsugumiSettings:  os.Getenv("TSUGUMI_SETTINGS"),
-		TsugumiSettings2: os.Getenv("TSUGUMI_SETTINGS2"),
+		SystemLog:       os.Getenv("SYSTEM_LOG"),
+		Port:            ":" + os.Getenv("PORT"),
+		PrefectureCode:  os.Getenv("PREFECTURE_CODE"),
+		TsugumiSettings: os.Getenv("TSUGUMI_SETTINGS"),
 	}
 
 	Config.SystemLogFromPackage = "../" + Config.SystemLog
