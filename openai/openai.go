@@ -58,6 +58,7 @@ func SendQuestion(prompt string) (*ChatGptResponse, error) {
 		MaxToken: DEFAULT_MAX_TOKEN,
 		Messages: []Message{
 			{Role: "system", Content: config.Config.TsugumiSettings},
+			{Role: "system", Content: config.Config.TsugumiSettings2},
 			{Role: "user", Content: prompt},
 		},
 	}
