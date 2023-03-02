@@ -57,10 +57,6 @@ func getAnswer(message string) string {
 	return answer
 }
 
-func replaceIndention(message string) string {
-	return strings.Replace(message, "\n", "", 2)
-}
-
 func getStampMessage(id string, resouceType linebot.StickerResourceType) string {
 	return fmt.Sprintf("スタンプIDが%sで種類が%sだよ！", id, resouceType)
 }
@@ -101,7 +97,6 @@ func webhooker(w http.ResponseWriter, req *http.Request) {
 		case *linebot.TextMessage:
 			question := message.Text
 			answer := getAnswer(question)
-			// replacedAnswer := replaceIndention(answer)
 			err = line.ReplyMessageWithLog(answer, event.ReplyToken, DEFAULT_OUTPUT_LOG_BUFFER_TIME)
 			if err != nil {
 				log.Fatal(err)
