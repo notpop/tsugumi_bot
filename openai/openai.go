@@ -57,7 +57,7 @@ func SendQuestion(prompt string) (*ChatGptResponse, error) {
 		Model:    DEFAULT_MODEL,
 		MaxToken: DEFAULT_MAX_TOKEN,
 		Messages: []Message{
-			{Role: "system", Content: "You are a helpful assistant. Please answer basically in Japanese unless otherwise specified."},
+			{Role: "system", Content: config.Config.TsugumiSettings},
 			{Role: "user", Content: prompt},
 		},
 	}

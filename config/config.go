@@ -14,6 +14,7 @@ type ConfigList struct {
 	SystemLogFromPackage string
 	Port                 string
 	PrefectureCode       string
+	TsugumiSettings      string
 }
 
 var Config ConfigList
@@ -43,6 +44,7 @@ func init() {
 		SystemLog:      os.Getenv("SYSTEM_LOG"),
 		Port:           ":" + os.Getenv("PORT"),
 		PrefectureCode: os.Getenv("PREFECTURE_CODE"),
+		TsugumiSettings: os.Getenv("TSUGUMI_SETTINGS"),
 	}
 
 	Config.SystemLogFromPackage = "../" + Config.SystemLog
