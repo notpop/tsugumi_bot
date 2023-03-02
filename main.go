@@ -6,7 +6,6 @@ import (
 	"github.com/robfig/cron/v3"
 	"log"
 	"net/http"
-	"time"
 	"tsugumi_bot/config"
 	"tsugumi_bot/line"
 	"tsugumi_bot/openai"
@@ -42,7 +41,6 @@ func broadcastWeather() {
 func getAnswer(message string) string {
 	log.Println("question: " + message)
 	response, err := openai.SendQuestion(message)
-	time.Sleep(time.Second * 2)
 	if err != nil {
 		log.Print(err)
 	}
