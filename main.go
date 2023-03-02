@@ -46,7 +46,13 @@ func getAnswer(message string) string {
 		log.Print(err)
 	}
 
-	answer := response.Choices[0].Text
+	if len(response.Choices) == 0 {
+		log.Print("\nAnswerが取れてません!!!")
+		return "質問に答えられませんでした。複数回同じことが続く場合は管理者に問い合わせてください。"
+	}
+
+	answer := response.Choices[0].Message.Content
+
 	log.Println("answer: " + answer)
 	return answer
 }
@@ -95,8 +101,8 @@ func webhooker(w http.ResponseWriter, req *http.Request) {
 		case *linebot.TextMessage:
 			question := message.Text
 			answer := getAnswer(question)
-			replacedAnswer := replaceIndention(answer)
-			err = line.ReplyMessageWithLog(replacedAnswer, event.ReplyToken, DEFAULT_OUTPUT_LOG_BUFFER_TIME)
+			// replacedAnswer := replaceIndention(answer)
+			err = line.ReplyMessageWithLog(answer, event.ReplyToken, DEFAULT_OUTPUT_LOG_BUFFER_TIME)
 			if err != nil {
 				log.Fatal(err)
 			}

@@ -7,13 +7,18 @@ import (
 	"tsugumi_bot/utils"
 )
 
-type ChatGpt struct {
-	Model    string `json:"model"`
-	Prompt   string `json:"prompt"`
-	MaxToken int64  `json:"max_tokens"`
+type Message struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
 }
 
-type ChatGptResponse struct {
+type ChatGpt struct {
+	Model    string    `json:"model"`
+	Messages []Message `json:"messages"`
+	MaxToken int64     `json:"max_tokens"`
+}
+
+type OldChatGptResponse struct {
 	ID      string `json:"id"`
 	Object  string `json:"object"`
 	Created int    `json:"created"`
@@ -31,10 +36,30 @@ type ChatGptResponse struct {
 	} `json:"usage"`
 }
 
+type ChatGptResponse struct {
+	ID      string `json:"id"`
+	Object  string `json:"object"`
+	Created int    `json:"created"`
+	Model   string `json:"model"`
+	Usage   struct {
+		PromptTokens     int `json:"prompt_tokens"`
+		CompletionTokens int `json:"completion_tokens"`
+		TotalTokens      int `json:"total_tokens"`
+	} `json:"usage"`
+	Choices []struct {
+		Message struct {
+			Role    string `json:"role"`
+			Content string `json:"content"`
+		} `json:"message"`
+		FinishReason string `json:"finish_reason"`
+		Index        int    `json:"index"`
+	} `json:"choices"`
+}
+
 const (
 	URL                         = "https://api.openai.com/v1/"
-	CREATE_COMPLETION_END_POINT = "completions"
-	DEFAULT_MODEL               = "text-davinci-003"
+	CREATE_COMPLETION_END_POINT = "chat/completions"
+	DEFAULT_MODEL               = "gpt-3.5-turbo"
 	DEFAULT_MAX_TOKEN           = 4000
 )
 
@@ -48,8 +73,11 @@ func header() map[string]string {
 func SendQuestion(prompt string) (*ChatGptResponse, error) {
 	chatGpt := &ChatGpt{
 		Model:    DEFAULT_MODEL,
-		Prompt:   prompt,
 		MaxToken: DEFAULT_MAX_TOKEN,
+		Messages: []Message{
+			{Role: "system", Content: "You are a helpful assistant. Please answer basically in Japanese unless otherwise specified."},
+			{Role: "user", Content: prompt},
+		},
 	}
 
 	data, err := json.Marshal(chatGpt)
