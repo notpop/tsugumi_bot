@@ -41,9 +41,9 @@ func init() {
 		ChannelToken:  os.Getenv("LINE_BOT_CHANNEL_TOKEN"),
 		// SystemLog:        cfg.Section("system").Key("log_file").String(),
 		// Port:             ":" + cfg.Section("web").Key("port").String(),
-		SystemLog:      os.Getenv("SYSTEM_LOG"),
-		Port:           ":" + os.Getenv("PORT"),
-		PrefectureCode: os.Getenv("PREFECTURE_CODE"),
+		SystemLog:       os.Getenv("SYSTEM_LOG"),
+		Port:            ":" + os.Getenv("PORT"),
+		PrefectureCode:  os.Getenv("PREFECTURE_CODE"),
 		TsugumiSettings: os.Getenv("TSUGUMI_SETTINGS"),
 	}
 

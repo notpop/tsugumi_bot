@@ -6,7 +6,6 @@ import (
 	"github.com/robfig/cron/v3"
 	"log"
 	"net/http"
-	"strings"
 	"tsugumi_bot/config"
 	"tsugumi_bot/line"
 	"tsugumi_bot/openai"
